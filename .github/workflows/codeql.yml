@@ -1,0 +1,41 @@
+```yaml
+name: CodeQL
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    # The branches under which pull requests are targeted.
+    branches:
+      - main
+  schedule:
+    - cron: '0 2 * * 1'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: java
+
+    - name: Build project
+      run: |
+        ./gradlew build -x test # Adjust the build command based on your project's build tool and requirements
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+```
