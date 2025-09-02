@@ -1,0 +1,29 @@
+name: Java Maven CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Versioning
+        run: echo "VERSION=$(date '+%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+      - name: Build
+        run: mvn clean package
+
+      - name: Save Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: target/*.jar
